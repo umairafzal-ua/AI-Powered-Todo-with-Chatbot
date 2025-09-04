@@ -30,11 +30,23 @@ const serviceAdapter = new OpenAIAdapter({
 });
 
 export const POST = async (req = new NextRequest()) => {
-  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-    runtime,
-    serviceAdapter,
-    endpoint: "/api/copilotkit",
-  });
+  console.log("🔑 OPENROUTER_API_KEY:", process.env.OPENROUTER_API_KEY ? "SET" : "MISSING");
+  console.log("🌍 PUBLIC_APP_URL:", process.env.PUBLIC_APP_URL);
 
-  return handleRequest(req);
+  try {
+    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+      runtime,
+      serviceAdapter,
+      endpoint: "/api/copilotkit",
+    });
+
+    return await handleRequest(req);
+  } catch (err) {
+    console.error("❌ CopilotKit API Error:", err);
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error", details: String(err) }),
+      { status: 500 }
+    );
+  }
 };
+w
