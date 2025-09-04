@@ -49,4 +49,3 @@ export const POST = async (req = new NextRequest()) => {
     );
   }
 };
-w
